@@ -1,0 +1,429 @@
+= DOCUMENTAȚIE LOCALIZARE SFX
+
+== 1. Aspecte funcționale
+
+=== 1.1. Înregistrarea transportului la importuri 
+În cazul transportului la IMPORT in care apar diferente intre val RON a transportului de pe fact transportatorului si valoarea transportului la curs de vamă. Se introduc 2 linii pe fact transportatorului: 
+a. Valoarea taxa articol TRANSPORT-IMPORT cu valoarea in RON la curs de vama distribuită pe articolele achiziționate 
+b. Valoare taxa articol TRANSPORT-INTERN cu valoarea in RON a transportului diferența de curs intre cursul de vama si cel al facturii distribuită pe articolele achiziționate 
+Aceasta factura va apărea atât in coloana de achiziții de import (a) cît si in tara (b). 
+Astfel se rezolvă problema din D300 fără a modifica valoarea bazei de impozitare și fără să fie nevoie de rotunjiri. 
+ 
+=== 1.2. Regularizări pentru livrări intracomunitare 
+Desigur că prima variantă este stornarea și refacerea facturii emise. Dacă totuși se insistă asupra regularizării livrări intracomunitare scutite conform art. 294 alin.(2) lit.a) şi d) din CF, atunci va trebui setat și folosit VAT BUS POST GR care se numește V_UE_AD_REG!!! 
+IMPORTANT: pentru regularizari interne, utilizatorul trebuie sa aleaga vat bus. Posting gr. A_INT_REG
+ 
+=== 1.3. Înregistrarea facturilor de import 
+Pentru o înregistrare rapidă, într-un singur document și fără a fi nevoie de completarea unor info suplimentare (nr doc vamal de import), se pot urma pașii de mai jos: 
+* Pas1: Vine factura de la Fz și se înregistrează pe Bunuri in curs de aproviz. 
+* Pas 2: Când vine declarația vamala se face: 
+** Storno la punctul 1 - desigur ca doar daca pasul 1 s-a efectuat 
+** Se pun liniile de marfa cu valoarea in vama 
+** Se adaugă o linie de tip Taxa Articol pt TAXAVAMALA, care se distribuie pe liniile de marfa de mai sus. 
+** Se adaugă o linie de tip Cont Contabil cu valoarea taxei vamale cu semn minus, care defapt anulează efectul liniei de taxă articol din document (pt ca nu vrem sa creștem datoria către Furnizor, ci doar baza de impozitare). Această linie nu trebuie să aibă TVA. 
+ 
+=== 1.4. Inventar 
+La minus de inventar, se face nota contabila de mana 635-4426 cu valoarea (doar a) tva-ului care nu este deductibil, adică se ajusteaza TVA-ul dedus (valoarea e doar TVA). Aceasta tranzactie trebuie sa apară in SAF_T pe grupa 380. Pentru asta, fie se face parametrizare specifica in VAT Posting Setup (inventar cu Inventar), fie se modifica manual de către utilizator, acel cod in fișierul XML. 
+De discutat care ar fi nota contabila pentru închiderea inventarului. 
+ 
+=== 1.5. Ajustare curs de schimb 
+La ajustarea cursului de schimb se pot pune filtre pe toate câmpurile din tabelele de Clienți, Furnizori, Bănci, Conturi Contabile. De asemenea e disponibilă previzualizarea înainte de înregistrare (e de activat aceasta din Feature Management). 
+ 
+=== 1.6. Mijloace fixe 
+Este câmp specific pentru Cod Angajat și o tabelă în care se rețin modificările/mișcările de la un angajat la altul sau de pe o locație pe alta. 
+S-a facut si un raport specific – Registru MF. -> la egb (aici avem un istoric mij fixe pentru reprezentant si locatie; + un PBI)
+De definit si asociat la clase/subclase perioada de amortizare a MF-urilor care sunt incadrate acolo. 
+ 
+=== 1.7. Integrare cu ANAF 
+In fișa pertenerilor, la completarea VAT Registration No, se completează automat diverse câmpuri, precum: 
+* Not VAT Registered 
+* VAT at Payment 
+* Inactiv 
+Modificarea valorilor din aceste câmpuri pe Furnizor, determină atribuirea a unor grupe de TVA specifice, pentru fiecare caz in parte. TREBUIE sa se faca modificarea automata a grupelor – si la CL si la FZ pentru ca ne ajuta in D394.  
+Câmpul Affiliated Person se completează manual de către utilizator. 
+DE verificat daca mai trebuie datele de livrare pe comanda de vanzare. 
+
+==== Parametrizare și funcționare
+În pagina de Localization Seup, secțiunea General, avem câmpul URL ANAF Partner Info unde se setează link-ul ce se va folosi pentru request-ul la ANAF.
+
+În fișa clientului/furnizorului, se va completa în primul rând Country/Region Code, apoi la completarea VAT Registration No., se face un request spre ANAF de unde vom primi datele despre persoana juridică a cărei C.U.I. l-am introdus anterior.
+
+IMPORTANT: In cazul în care VAT Registration No. Introdus nu este valid sau este vreo problemă la site-ul ANAF-ului (de ex., poate fi în mentenanță), vom primi o notificare care va spune că nu s-a putul procesa request-ul.
+
+Informațiile primite vor fi completate la nivel de client/furnizor, în câmpurile corespunzătoare, după cum urmează:
+
+[cols="1,1",options="header"]
+|===
+|Răspuns ANAF | Câmpul în care merg valorile din Customer/Vendor
+
+| "denumire" | Name
+| "telefon" | Phone, Mobile Phone No.
+| "fax" | Fax
+| "forma_organizare" | Partner Type
+| "nrRegCom" | Registration Number
+| "scpTVA" | VATRegisteredLocSFX
+| "statusTvaIncasare" | VATAtPaymentLoc
+| "statusInactivi" | InactiveLocSFX
+| "sdenumire_Strada", "snumar_Strada" | Addres
+| "sdenumire_Localitate" | City
+| "scod_Postal" | Post Code
+|===
+
+[source,json]
+----
+{
+    "found": [
+        {
+            "date_generale": {
+                "data": "2025-06-16",
+                "cui": 28220073,
+                "denumire": "SOFT EXTEND S.R.L.", // Name
+                "adresa": "JUD. CLUJ, MUN. CLUJ-NAPOCA, STR. ANTONIO GAUDI, NR.13",
+                "telefon": "0751172951", // Phone, Mobile Phone No.
+                "fax": "", // Fax
+                "codPostal": "",
+                "act": "",
+                "stare_inregistrare": "INREGISTRAT din data 22.03.2011",
+                "data_inreg_Reg_RO_e_Factura": "",
+                "organFiscalCompetent": "Administraţia Judeţeană a Finanţelor Publice Cluj",
+                "forma_de_proprietate": "PROPR.PRIVATA-CAPITAL PRIVAT AUTOHTON",
+                "forma_organizare": "PERSOANA JURIDICA", // Partner Type
+                "forma_juridica": "SOCIETATE COMERCIALĂ CU RĂSPUNDERE LIMITATĂ",
+                "statusRO_e_Factura": false,
+                "data_inregistrare": "2011-03-22",
+                "nrRegCom": "J12/674/2011", // Registration Number
+                "cod_CAEN": "6201",
+                "iban": ""
+            },
+            "inregistrare_scop_Tva": {
+                "scpTVA": true, // VATRegisteredLocSFX
+                "perioade_TVA": [
+                    {
+                        "data_inceput_ScpTVA": "2024-01-19",
+                        "data_sfarsit_ScpTVA": "",
+                        "data_anul_imp_ScpTVA": "",
+                        "mesaj_ScpTVA": ""
+                    },
+                    {
+                        "data_inceput_ScpTVA": "2011-03-29",
+                        "data_sfarsit_ScpTVA": "2015-11-01",
+                        "data_anul_imp_ScpTVA": "2015-10-30",
+                        "mesaj_ScpTVA": "Anularea înregistrarii în scopuri de TVA a fost efectuata din oficiu, potrivit dispozitiilor Art.153 alin.(9) lit.e) din Legea nr.571/2003 privind Codul fiscal, cu modificarile si completarile ulterioare"
+                    }
+                ]
+            },
+            "inregistrare_RTVAI": {
+                "dataInceputTvaInc": "2013-01-01",
+                "dataSfarsitTvaInc": "2015-11-01",
+                "tipActTvaInc": "Radiere",
+                "dataActualizareTvaInc": "2015-11-27",
+                "dataPublicareTvaInc": "2015-11-28",
+                "statusTvaIncasare": false // VATAtPaymentLoc
+            },
+            "stare_inactiv": {
+                "dataInactivare": "",
+                "dataReactivare": "",
+                "dataPublicare": "",
+                "dataRadiere": "",
+                "statusInactivi": false // InactiveLocSFX
+            },
+            "inregistrare_SplitTVA": {
+                "statusSplitTVA": false,
+                "dataInceputSplitTVA": "",
+                "dataAnulareSplitTVA": ""
+            },
+            "adresa_sediu_social": {
+                "sdenumire_Strada": "Str. ANTONIO GAUDI", // Addres
+                "snumar_Strada": "13", // Addres
+                "scod_Localitate": "103",
+                "sdenumire_Localitate": "Mun. Cluj-Napoca", // City
+                "sdenumire_Judet": "CLUJ",
+                "scod_Judet": "12",
+                "scod_JudetAuto": "CJ",
+                "sdetalii_Adresa": "",
+                "scod_Postal": "", // Post Code
+                "stara": ""
+            },
+            "adresa_domiciliu_fiscal": {
+                "ddenumire_Localitate": "Mun. Cluj-Napoca",
+                "ddenumire_Strada": "Str. ANTONIO GAUDI",
+                "dnumar_Strada": "13",
+                "dcod_Localitate": "103",
+                "ddenumire_Judet": "CLUJ",
+                "dcod_Judet": "12",
+                "dcod_JudetAuto": "CJ",
+                "ddetalii_Adresa": "",
+                "dcod_Postal": "",
+                "dtara": ""
+            }
+        }
+    ],
+    "notFound": []
+}
+----
+
+=== 1.8. Instrumente de plata si incasare 
+Vezi documentatia 
+De gandit o interfata mai usora pentru utilizator.  
+1. TREBUIE ca instrumentele sa nu afecteze soldul partenerului. 
+2. La anularea instrumentului sa se faca automat dezaplicarea 
+3. Procesul de anulare instrument 
+4. Decontarea instrumentului 
+5. Pagina de instrumente  
+6. Unde se noteaza ca un instrument este girat, amânat 
+ 
+=== 1.9. Bon de consum 
+Pentru înregistrarea consumul diverselor stocuri, se foloseste jurnal articol pe batch-ul Consum – vezi documentatia. 
+
+==== Parametrizări și funcționare:
+În pagina Localization Setup avem secțiunea Receipt Setup:
+
+- Receipt Journal Template Name : reprezintă numele șablonului jurnalului în care se vor înregistra liniile de consum
+- Receipt Journal Batch Name : reprezintă numele lotului jurnalului pentru înregistrarea consumului. Lotul de jurnal trebuie să aibă setate următoarele câmpuri încadrate:
+
+IMPORTANT: Banca setată trebuie să aibă setat un grup de înregistrare conturi bancare
+IMPORTANT: Se creaza 2 serii numerice, una pentru chitanțele încă neînregistrate și una pentru cele înregistrate + un cod motiv
+
+Pentru a înregistra consumul, navigăm la pagina Posted Sales Invoices/Invoice, unde avem butonul de Create Receipt 
+Sau
+
+IMPORTANT: Dacă nu au fost încă făcute setările în localizare, vom privi un mesaj care ne va informa despre acest lucru, și nu va continua execuția.
+
+Dacă sunt făcute setările necesare, apăsând butonul, se va deschide jurnalul conform setărilor din localizare, și se va crea linia pentru înregistrarea plății:
+
+IMPORTANT: Suma de plată (plata aplicată) trebuie să fie o valoare negativă
+
+Pentru a imprima/vizualiza liniile corespunzătoare bonului de consum, avem 3 metode:
+
+1. Folosind direct pagina Detailed Customer Ledger Entries
+- În pagina Detailed Customer Ledger Entries, punem filtre pe Entry Type = Initial Entry și Document Type = Payment. Pentru această combinație, butonul de Print Receipt va fi activ
+IMPORTANT: Pentru a găsi liniile pentru bonurile de consum mai repede, salvați filtrele apăsând butonul încadrat cu verde, și setați o denumire sugestivă
+IMPORTANT: Eventual se poate adăuga și filtrul ca Document No. Să înceapă cu CH/cum s-a setat seria numerică pentru chitantele înregistrate
+
+Apăsând butonul de Print receipt, se va deschide un page request unde putem seta limba în care va fi tipărită chitanța:
+
+Chitanța va fi în două exemplare și va cuprinde informații depsre companie, sigla companiei, informatii despre client și informații despre tranzacție :
+
+2. Din Cardul clientului
+La nivel de client, avem câmpul Balance (LCY), care este un flowfield. 
+
+Apăsînd pe acest câmp, se va deschide Customer Ledger Entries cu filtru pe acest client si Open = true. 
+
+Stergem filtrul de Open și adăugăm filtrul ca Document Type = Payment.
+
+Accesăm Remaining Amt. (LCY) ca să ajungem la liniile de detalii, iar acolo se poate genera chitanța conform exemplului din metoda anterioară (din liniile de Initial Entry + Payment).
+
+3. Din factură
+Navigăm la factura pentru care vrem să generăm chitanța, și apăsăm pe suma de la Remaining Amt. (LCY).
+
+În această pagină, filtrăm după Document No. Al liniei de Paymet, ștergând filtrul de Cust. Ledger Entry No.
+
+În continuare se poate genera chitanța, din liniile de Initial Entry + Payment.
+
+=== 1.10. Jurnale de TVA 
+Jurnalele de TVA se generează pe baza unor parametrizări din VAT Statements, setate în pagina de Localization Setup.
+
+==== Parametrizări în pagina Localization Setup:
+În pagina Localization Setup, în secțiunea de declarații, avem următoarele parametrizări legate de jurnale:
+
+- VAT Journal Statement Template Name : setează template-ul de unde va lua liniile de VAT statements pentru a genera Jurnalul TVA 
+- VAT Sales Journal Statement Name : setează numele declarației (secțiunii)  de unde va lua liniile de VAT statements pentru a genera Jurnalul TVA de vânzare
+- VAT Purchase Journal Statement Name : setează numele declarației (secțiunii) de unde va lua liniile de VAT statements pentru a genera Jurnalul TVA de cumpărare
+IMPORTANT: Pentru simplificare, am pastrat același set-up pentru ambele jurnale
+
+==== Parametrizări în VAT Statements: 
+În rapoartele de TVA, avem numerotate coloanele pentru fiecare sumă necesară să apară în jurnal. În pagina VAT Statements, câmpul Box No.  reprezintă chiar numărul coloanei pe care trebuie să punem valoarea calculată însumând liniile din VAT Entries, pentru combinația respectivă de Gen. Posting Type +VAT Bus. Posting Group + VAT Prod. Posting Group + Amount Type.
+
+=== 1.10.1. Jurnal TVA de cumpăre
+Pentru a genera Jurnalul TVA de cumpărare, căutând în bara de search VAT Purchase Journal, și alegând raportul cu acest nume, se va deschide un page request unde se completează câteva date legate de perioada de declaratie + unele filtre.
+
+- Start Date : data de început a perioadei de raportare  (dacă nu se completează, se va seta prima dată de când avem înregistrări în VAT Entries)
+- End Date : data de sfârșit a perioadei de raportare  (dacă nu se completează, se va seta ziua curentă - today)
+- Alte filtre legate de datele care se vor aduce în raport
+
+După completarea perioadei, apăsând Download, se va descărca excel-ul cu declarația.
+În Excel, se apasă butonul Enable Editing și în pagina Raport-RO avem Jurnalul de cumpărări, alături de câteva informații despre companie + perioada de raportare.
+
+Header-ul de tabel conține următoarele câmpuri:
+IMPORTANT: Dintre acestea, coloanele cu numerele: 7, 21, 22, 23, 24, 25 sunt calculate manual, nu folosind logica legata de Box No.
+
+=== 1.10.2. Jurnal TVA de vânzare
+Pentru a genera Jurnalul TVA de vânzare, căutând în bara de search VAT Sales Journal, și alegând raportul cu acest nume, se va deschide un page request unde se completează câteva date legate de perioada de declaratie + unele filtre.
+
+- Start Date : data de început a perioadei de raportare  (dacă nu se completează, se va seta prima dată de când avem înregistrări în VAT Entries)
+- End Date : data de sfârșit a perioadei de raportare  (dacă nu se completează, se va seta ziua curentă - today)
+- Only D390 : reprezintă un filtru care specifică să se aducă doar liniile care întra în declarația D390 (momentan se aduc liniile care au valorile din coloanele 8-17 diferite de 0)
+- Only D394 : reprezintă un filtru care specifică să se aducă doar liniile care întra în declarația D394 (momentan se aduc liniile care au valorile din coloanele 18-28 diferite de 0)
+- Alte filtre legate de datele care se vor aduce în raport
+
+După completarea perioadei, apăsând Download, se va descărca excel-ul cu declarația.
+În Excel, se apasă butonul Enable Editing și în pagina Raport-RO avem Jurnalul de cumpărări, alături de câteva informații despre companie + perioada de raportare.
+
+Header-ul de tabel conține următoarele câmpuri:
+
+=== 1.11. Declarații
+
+==== 1.11.1. Declarația D300
+D300 = Decont privind Taxa pe VaA 
+- se intocmeste in baza jurnalelor de TVA (pentru toti partenerii si toate tranzactiile)– adica e o situatie sintetica pe baza Jurnalul de Achizitii si Jurnalul de Vanzari 
+- acest decont trebuie sa bata/se reconciliaza cu aceste 2 jurnale detaliate si cu balanta 
+See: https://static.anaf.ro/static/10/Anaf/Declaratii_R/300.html - vezi Soft A 
+
+Limitarea responsabilitatii: 
+1. Urmaroarele randuri din D300 nu au fost implementate: 2, 4 
+2. Pentru randurile 6 si 8 se va consulta clientul cu privire la incidenta acestor tipuri de tranzactii. Daca e nevoie de ele, atunci se va crea o grupa noua de VAT Bus Post Gr = A_UE_Reg (regularizare) si se va parametriza in consecinta inclusiv in VAT Posting Setup pentru SAFT. 
+ 
+FUNCȚIONALITATE 
+ 
+În declarația D300 se claculează mai multe sume în funcție Tipul liniei (Type), formula acelei linii (Row Totaling) și semn (Print with). Aceste sume sunt exportate în D300 dacă au completat Tag to Be Exported in D300, în funcție de coloana Show value in D300. În cele ce urmează, vom prezenta mai explicit logica de calcul din spatele acestor parametrizări. 
+ 
+- Type : 
+  * VAT Entry Totaling : însumarea se face pe liniile din VAT Entries cu combinația Gen. Posting Type + VAT Bus. Posting Group + VAT Prod. Posting Group + Amount Type aceiași cu cea din VAT Statements 
+  * Account Totaling : însumarea se face pe baza formulei din câmpul Account Totaling (în cazul de față, nu avem setate formule pentru acest câmp) 
+  * Row Totaling : însumarea se face pe baza formulei din câmpul Row Totaling (în cazul de față, nu avem setate formule pentru acest câmp) 
+ 
+- Print with : în funcție de cum este setat acest câmp (Sign / Opposite Sign), valorile din sume calculate după regulile prezentate mai sus, vor fi afișate cu semn “+” sau “-“. 
+- Tag to Be Exported in D300 : specifică tag-ul în care va fi pusă suma după calcularea ei dupa reguluile anterioare, și ținând cont de câteva filtre ce vor fi prezentate în următoarele linii. Se exportă doar valori cu acest tag completat! 
+- Show Value in D300 : unele tag-uri trebuie să fie exportate doar dacă au valoare pozitivă/negativă (maximul dintre 2 e mai mic/mare decât zero -> am transformat această constrângere într-o diferență și comparație în funcție de semn) . Totuși, se calculează sumele pentru toate liniile din VAT Statements, deoarece unele sunt definite ca elemente fara tag de exportat – cu semn opus față de complementara lor ce are tag de exportat (pentru max din diferenta si 0) .  
+Constrângerea la care făceam referire arată cam așa:  
+Acest câmp poate avea 3 valori: 
+  * “” : este gol dacă nu avem restricții pentru aceste câmpuri, se calculează normal după regulile amintite anterior (dacă valoarea este zero, tagul nu va fi exportat) 
+  * When is positive : se exportă suma doar dacă valoarea sumei calculate este un numar pozitiv (se exporta zero în caz contrar) – tagul va fi exportat totdeauna 
+  * When is negative : se exportă suma doar dacă valoarea sumei calculate este un numar negativ (se exporta zero în caz contrar) – tagul va fi exportat totdeauna 
+- Calculate Manualy For D300 : în unele cazuri, formulele de rowtotaling nu funcționează corect/au unele restricții. Pentru aceste cazuri, avem această bifă. Pentru liniile care au bifa, folosind tot formula din Row Totaling, se calculează prin cod valoarea sumei pentru D300. 
+IMPORTANT: Câmpul Value To Export In D300 reprezintă valoarea ce s-a exportat ultima dată când s-a generat declarația D300 (câmpul e folosit în special pentru teste/verificări mai rapide, user-friendly) 
+  
+Apăsând butonul de Generate D300 XML, se deschide un page request unde trebuie să setăm câteva informații ce trebuie să apară în declarații. 
+ 
+IMPORTANT: Câmpurile marcate cu * trebuie să fie completate obligatoriu 
+ 
+- Declarant No. : codul angajatului în numele căruia se face declarația; câmpurile pentru acesta se completează similar -> vezi mai jos 
+- Request a Refund : specifică dacă se solicită rambursare 
+- Submitted by a Representative : specifică dacă declarația se depune de către un reprezentant 
+- Basis : specifică temeiul legal pentru depunerea decontului de taxă pe valoarea adăugată după anularea rezervei verificării ulterioare (temei=0 nu s -a bifat; temeiul temei = 2 cf art. 105 alin. (6) lit. b) din Legea nr. 207/2015 privind Codul de procedură fiscală, cu modificările şi completările ulterioare) 
+- Internal Check : Se bifeaza daca se aplica metoda simplificata pentru operatiuni interne 
+- Check Cereal : specifică dacă s-au efectuat livrari de cereale pentru care se aplica taxarea inversă 
+- Check Consoles/Laptops : specifică daca s-au efectuat livrări de console / tablete PC / laptop-uri pentru care se aplica taxarea inversă 
+- Check Devices : specifică dacă s-au efectuat livrari de dispozitive cu circuite integrate inainte de integrarea lor in produse destinate utilizatorului final pentru care se aplica taxarea inversă 
+- Check Mobile : specifică dacă s-au efectuat livrari de telefoane mobile pentru care se aplica taxarea inversă 
+- În secțiunea Statement Period:  
+  * Starting Date : data de început a perioadei de raportare  
+  * Ending Date : data de sfârșit a perioadei de raportare  
+- În secțiunea Filters:  
+  * Include VAT Entries : se specifică dacă se dorește sa se includă intrari TVA deschise / închise 
+  * Include VAT Entries : se specifică dacă se dorește sa se includă intrari TVA dinaintea perioadei de raportare  
+  * Show Amounts in Add. Reporting Currency : specifică dacă sumele vor apărea în moneda adițională de raportare 
+  * Country/Region Filter : specifică filtrul de țară/regiune care să fie aplicat pentru intrările TVA 
+ 
+IMPORTANT: Tag-urile cui, den, adresa, telefon, fax, mail, banca, cont, caen se completează folosind câmpurile corespunzătoare din Company Informations 
+După completarea opțiunilor, apăsând butonul ok, se descarcă XML-ul cu declarația. 
+ 
+==== 1.11.2. Declarația D390
+D390 = Declaratie Recapitulativa privind Achizitiile/Livrarile/Prestarile Intracomunitare 
+- poate sa fie privita ca o parte a D300 
+- se intocmeste pe baza baza jurnal doar vis-a-vis de parteneri din UE 
+
+FUNCȚIONALITATE 
+În declarația D390 se aduc liniile din VAT Entries care, pentru combinația Gen. Posting Type + VAT Bus. Posting Group + VAT Prod. Posting Group, au completată coloana Operation Type For D390 (reprezintă tipul de operație ce se declară în D390 pentru combinația respectivă). 
+ 
+Apăsând butonul de Generate D390 XML, se va deschide un page request pentru câteva detalii ce se vor declara in D390 
+ 
+IMPORTANT: Câmpurile marcate cu * sunt obligatoriu de completat! 
+ 
+- Type Of Declaration : poate fi rectificativă sau inițială (inițială dacă e varianta pe care o depunem prima dată pentru perioada respectivă, rectificativă dacă o depunem o corectare) 
+- Declarant No. : numărul angajatului declarant (acesta trebuie sa aibă completat pe cardul său informațiile încadrate) 
+ 
+În secțiunea Statement Period: 
+- Starting Date : data de început a perioadei de raportare 
+- Ending Date : data de sfârșit a perioadei de raportare 
+
+IMPORTANT: tag-urile cui (VAT Registration No.), den (Name), adresa (City + County + Address + Post Code + Country/Region Code), telefon (Phone No.), fax (Fax No.), mail (e-mail) se completează cu informații din Company Informations 
+
+După ce am setat toate informațiile și am apăsat pe ok, se va deschide un modal unde avem liniile ce vor fi transformate mai târziu în operații (înainte să se afișeze, se însumează liniile pentru aceiași combinație de Bill-to/Pay-to No.și Operation Type For D390 -> liniile care se însumează sunt cele aduse din vAT Entries, care au parametrizare în VAT statements). 
+ 
+IMPORTANT: Din acest modal se pot șterge linii, iar acestea nu vor mai apărea în XML-ul generat 
+IMPORTANT: Se pot modifica câmpurile Operation Type For D390 și Base 
+IMPORTANT: Sumele se rotunjesc la valoarea cea mai apropiată 
+După ce sunt verificate/ajustate liniile, apăsând butonul ok, se descarcă XML-ul cu declarația. 
+
+==== 1.11.3. Declarația D394
+D394 = Declaratie Informativa privind Livrarile/Prestarile/Achizitiile efectuate pe teritoriul national 
+- poate sa fie privita ca o parte a D300 
+- se intocmeste pe baza baza jurnal doar vis-a-vis de parteneri din RO 
+ 
+FUNCȚIONALITATE 
+În declarația D394 se aduc liniile din VAT Entries care, pentru combinația Gen. Posting Type + VAT Bus. Posting Group + VAT Prod. Posting Group, au completată coloana Operation Type For D394 (reprezintă tipul de operație ce se declară în D394 pentru combinația respectivă). 
+ 
+IMPORTANT: Nu se vor exporta linii de Operation Type For D394 = „N”, cu Partener Type  = „1” 
+  
+Apăsând butonul de Generate D394 XML, se deschide un page request unde va trebui să completăm câteva date ca să generăm declarația corespunzătoare. 
+IMPORTANT: Câmpurile marcate cu * sunt obligatorii (în page request se memorează ultimele valori cu care s-a rulat raportul) 
+  
+- Type Of Declaration : poate fi Initială sau Rectificativă 
+- VAT System : Normală sau VAT on receipts 
+- Representative No. : numărul angajatului reprezentant 
+ 
+IMPORTANT: pentru a se completa corespunzator tag-urile in XML-ul pentru D394, am indicat pentru fiecare câmp, cărui tag corespunde informația. Pentru tag-urile marcate si cu numere, se face o concatenare înainte să se pună informația în tag-ul corespunzător, în ordinea indicată 
+
+- Preaparer Person No. : codul angajatului care va apărea ca întocmit în declarație; câmpurile pentru acesta se completează similar 
+- Preparer person type : este legat tot de întocmit, și reprezintă tipul său din punct de vedere juridic (Person – persoană fizică sau Company – companie) 
+- Option : reprezintă optiunea referitoare la consultarea de catre persoana impozabila a tranzactiilor derulate cu aceasta prin intermediul aplicatiilor puse la dispozitie de ANAF 
+- Request : specifică dacă se solicita rambursarea sumei negative inregistrate in decontul de TVA aferent perioadei de raportare 
+
+În secțiunea Statement Period: 
+- Starting Date : data de început a perioadei de raportare 
+- Ending Date : data de sfârșit a perioadei de raportare 
+
+După completarea opțiunilor, apăsând butonul ok, se va deschide un modal unde vom avea toate liniile ce s-au generat conform parametrizarilor facute in vat statements, cu informatiile ce se vor pune in declaratie. 
+  
+IMPORTANT: Avem posibilitatea sa stergem randuri (declaratia se va intocmi cu liniile pe care le vom lasa in acest modal -> sume, numarari). 
+IMPORTANT: Se pot modifica câmpurile: Operation Type For D394, Partener Type For D394, Cota For D394, Countr/Region Code, VAT Registration No., Base, Amount, CodPR for D394.
+
+IMPORTANT: pentru operatii, se fac insumari pe linii care au aceiasi combinatie operation Type For D394 + Patener Type For D394 + Cota For D394 + VAT Registration No., iar sumele cu zecimale se rotunjesc la valoarea cea mai apropiata. 
+  
+ALTE PARAMETRIZARI: 
+- In pagina VAT Prod. Posting Groups am adaugat câmpul codPR for D394 unde specificăm pentru fiecare grupa de inregistare produse, CodulPR corespunzator, din nomenclatoarele de la ANAF pentri cod produse. 
+- În pagina de Localization Setup, avem doua campuri VAT Bus. Post. Gr. for FSAI in D394 și VAT Bus. Post. Gr. for BFAI in D394
+- În pagina de Serii numerice, avem un câmp Export to D394 care specifica dacă seria numerică respectivă va apărea în secțiunea de serii numerice in D394 
+- În pagina Company Information, trebuie sa fie completat codul CAEN pentru compania respectivă: 
+
+IMPORTANT: Tag-urile cui, den, adresa, telefon, fax, mail, caen se completează folosind câmpurile corespunzătoare din Company Informations 
+După ce sunt verificate/ajustate liniile din modal, apăsând butonul ok, se descarcă XML-ul cu declarația.
+
+=== 1.12. Balanța de verificare
+Balanța de verificare este un instrument contabil utilizat pentru a verifica înregistarea corectă în contabilitate a operațiunilor efectual, concordanța dintre contabilitatea sintetică și cea analitică.
+Raportul Balanța de verificare cu 4 egalități (Trial Balance with 4 Equalities) generează o astfel de situație conform datelor din BC. 
+Pas 1. Pentru a genera acest raport, căutăm în bara de căutare Raportul Balanța de verificare cu 4 egalități /Trial Balance with 4 Equalities
+
+Pas 2. Alegând opțiunea de mai sus, se deschide un page request unde avem de completat câteva opțiuni:
+
+- Account Type : specifică dacă dorim să vedem analiza din punct de vedere sintetic, analitic sau combinat
+- No. : permite să generăm raportul doar pentru anumite conturi contabile
+- Direct Posting : generează raportul doar pentru conturile contabile cu înregistrare directă
+- Date Filter: specifică perioada pe care dorim să vedem situația (poate fi o dată fixă, un filtru de forma “startDate..endDate” sau p1).
+IMPORTANT: Se pot adăuga și alte filtre, în funcție de necesitate (butonul “ + Filter …”)
+Pas 3. După completarea opțiunilor, se apasă butonul Download și raportul se va descărca pe dispozitivul folosit, în format xlsx (Excel).
+Pas 4. Deschidem Excel-ul descărcat și apăsăm butonul Enable Editing, pentru a se popular cu date  layout-ul situației. 
+
+Pas 5. Navigăm la pagina Report(EN) și analizăm datele
+
+- În secțiunea marcată cu verde avem câteva informații legate de cum a fost generată situația (Perioada de raportare, Numele companiei, numele utilizatorului care a generat raportul, tipul de conturi pentru care e generat raportul).
+- Pentru fiecare grupă de conturi avem un subtotal per grupă (!nu suma a ce s-a generat în rândurile precedente, ci suma conturilor din acea grupă, conform perioadei setate)
+
+Formulele pentru sume:
+- Initial Balance = suma pe debit/credit amount până la ultima zi dinaintea perioadei de raportare (Closing(StartDate-1)); suma se pune pe coloana de debit sau credit în funcție de valoarea setată la nivelul fișei contului contabil 
+  * “Credit” – sumele se pun pe coloanal de credit
+  * “Debit” – sumele se pun pe coloanal de debit
+  * ”Both” – sumele se pun pe coloana credit daca sunt valori negative, pe debit în caz contrar
+- Current Month Movements = suma pe debit/credit amount în perioada de raportare; sumele apar pe coloana de debit sau credit, în funcție de cum au fost înregistrate
+- Total Amounts = Initial Balance + Current Month Movements
+- Ending Balance = Diferența dintre Total Amounts Debit și Total Amounts Credit; suma se pune pe coloana de debit sau credit în funcție de valoarea setată la nivelul fișei contului contabil
+
+=== 1.13. Scadențar Furnizori
+Pentru a genera o situație a facturilor în sold pentru furnizori, avem raportul Scadențar Furnizori (Vendor Balance).
+Pas 1. Căutăm raportul Scadențar Furnizori / Vendor Balance
+
+Pas 2. se deschide page request-ul de mai jos și trebuie să completăm câteva opțiuni/filtre
+
+- Vendor Posting Group : dacă este completat, raportul va fi generat doar pentru furnizorii cu grupa de înregistrare aleasă
+- To Date : setează data la care dorim să avem analiza (dacă nu se complete
