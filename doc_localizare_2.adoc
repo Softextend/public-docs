@@ -1,89 +1,44 @@
 == LOCALIZARE SFX
 
-=== Înregistrarea transportului la importuri
+=== 1. Integrare cu ANAF
+In fișa pertenerilor, la completarea câmpului Cod Unic de Inregistrare (VAT Registration No), se completează automat următoarele câmpuri cu date de pe platforma ANAF:
 
-În cazul transportului la IMPORT in care apar diferente intre val RON a transportului de pe fact transportatorului si valoarea transportului la curs de vamă. Se introduc 2 linii pe fact transportatorului:
-
-[loweralpha]
-. Valoarea taxa articol TRANSPORT-IMPORT cu valoarea in RON la curs de vama distribuită pe articolele achiziționate
-. Valoare taxa articol TRANSPORT-INTERN cu valoarea in RON a transportului diferența de curs intre cursul de vama si cel al facturii distribuită pe articolele achiziționate
-
-Aceasta factura va apărea atât in coloana de achiziții de import (a) cît si in tara (b).
-
-Astfel se rezolvă problema din D300 fără a modifica valoarea bazei de impozitare și fără să fie nevoie de rotunjiri.
-
-=== Regularizări pentru livrări intracomunitare
-
-Desigur că prima variantă este stornarea și refacerea facturii emise. Dacă totuși se insistă asupra regularizării livrări intracomunitare scutite conform art. 294 alin.(2) lit.a) şi d) din CF, atunci va trebui setat și folosit VAT BUS POST GR care se numește V_UE_AD_REG!!!
-
-=== Înregistrarea facturilor de import
-
-Pentru o înregistrare rapidă, într-un singur document și fără a fi nevoie de completarea unor info suplimentare (nr doc vamal de import), se pot urma pașii de mai jos:
-
-* Pas1**:** Vine factura de la Fz și se înregistrează pe Bunuri in curs de aproviz.
-* Pas 2: Când vine declarația vamala se face:
-** Storno la punctul 1 - desigur ca doar daca pasul 1 s-a efectuat
-** Se pun liniile de marfa cu valoarea in vama
-** Se adaugă o linie de tip Taxa Articol pt TAXAVAMALA, care se distribuie pe liniile de marfa de mai sus.
-** Se adaugă o linie de tip Cont Contabil cu valoarea taxei vamale cu semn minus, care defapt anulează efectul liniei de taxă articol din document (pt ca nu vrem sa creștem datoria către Furnizor, ci doar baza de impozitare). Această linie nu trebuie să aibă TVA.
-
-=== Inventar
-
-La minus de inventar, se face nota contabila de mana 635-4426 cu valoarea (doar a ) tva-ului care nu este deductibil, adică se ajusteaza TVA-ul dedus (valoarea e doar TVA). Aceasta tranzactie trebuie sa apară in SAF_T pe grupa 380. Pentru asta, fie se face parametrizare specifica in VAT Posting Setup (inventar cu Inventar), fie se modifica manual de către utilizator, acel cod in fișierul XML.
-
-De discutat care ar fi nota contabila pentru închiderea inventarului.
-
-=== Ajustare curs de schimb
-
-La ajustarea cursului de schimb se pot pune filtre pe toate câmpurile din tabelele de Clienți, Furnizori, Bănci, Conturi Contabile. De asemenea e disponibilă previzualizarea înainte de înregistrare (e de activat aceasta din Feature Management).
-
-=== Mijloace fixe
-
-Este câmp specific pentru Cod Angajat și o tabelă în care se rețin modificările/mișcările de la un angajat la altul sau de pe o locație pe alta.
-
-S-a facut si un raport specific – Registru MF.
-
-De definit si asociat la clase/subclase perioada de amortizare a MF-urilor care sunt incadrate acolo.
-
-=== Integrare cu ANAF
-
-In fișa pertenerilor, la completarea VAT Registration No, se completează automat diverse câmpuri, precum:
-
-* Not VAT Registered
-* VAT at Payment
+* Înregistrat în scopuri de TVA
+* TVA la Încasare
 * Inactiv
+* Câmpul Affiliated Person se completează manual de către utilizator.
 
-Modificarea valorilor din aceste câmpuri pe Furnizor, determină atribuirea a unor grupe de TVA specifice, pentru fiecare caz in parte. TREBUIE sa se faca modificarea automata a grupelor – si la CL si la FZ pentru ca ne ajuta in D394.
+Există un raport care poate fi rulat oricând de cătru utilizator, și verifică modificările apărute între datele din aplicația Busines Central și cele pe pe platforma ANAF.
 
-Câmpul Affiliated Person se completează manual de către utilizator.
 
-DE verificat daca mai trebuie datele de livrare pe comanda de vanzare.
 
-=== Instrumente de plata si incasare
+=== 2. Mijloace fixe
+Mijloacele fixe și obiectele de inventar pot fi urmărite pe utilizator și gestiune/locație. Există un raport specific - Registru MF - pentru vizualizarea istoricului unui MF.
 
-Vezi documentatia
+=== 3. Ajustare cursului de schimb
+La ajustarea cursului de schimb se pot pune filtre pe toate câmpurile din tabelele de Clienți, Furnizori, Bănci, Conturi Contabile. De asemenea e disponibilă previzualizarea înainte de înregistrare, funcționalitate activată din Feature Management.
 
-De gandit o interfata mai usora pentru utilizator.
+=== 4. Închiderea de TVA
+Închiderea de TVA se rulează la sfârșitul fiecărei luni și presupune închiderea conturilor de venituri și cheltuieli cu contul de profit și perdere. Această operațiune se poate executa de oricâte ori se dorește și e nevoie.
 
-[arabic]
-. TREBUIE ca instrumentele sa nu afecteze soldul partenerului.
-. La anularea instrumentului sa se faca automat dezaplicarea
-. Procesul de anulare instrument
-. Decontarea instrumentului
-. Pagina de instrumente
-. Unde se noteaza ca un instrument este girat, amânat
+=== 5. Instrumente de plata si incasare
+Instrumentele de plată, CEC-urile și Biletele la Ordin, nu afectează soldul partenerului. Soldul acestora este vizibil atât în fișa partenerului, cât și prin intermediul analizelor financiare pe dimensiuni.
+Sunt două (2) etape în operarea acestor instrumente: înregistrarea și incararea/plata. Înregistrarea instrumentului se face prin intermediul unui jurnal general și presupune mai multă operare manuala (completarea partenerului, a numărului instrumentului, a datei scadente, a sumei și aplicarea acesteia pe facturile deschise), pe când încasarea presupune doar operarea extrasului bancar și aplicarea plății la instrument.
 
-=== Bon de consum
+=== 6. Înregistrarea transportului la importuri
+În cazul transportului la Import in care apar diferente între valoarea RON a transportului de pe fact transportatorului și valoarea transportului la curs de vamă, se introduce factura transportatorului iar aceasta va apărea atât in coloana de achiziții de import cât și în țară. Astfel se rezolvă problema din D300 fără a modifica valoarea bazei de impozitare și fără să fie nevoie de rotunjiri.
 
-Pentru înregistrarea consumul diverselor stocuri, se foloseste jurnal articol pe batch-ul Consum – vezi documentatia.
+=== 7. Înregistrarea facturilor de import
+Se poate înregistra un singur document și fără a fi nevoie de completarea unor info suplimentare (nr doc vamal de import).
 
-=== Jurnale de TVA
+=== 8. Regularizări pentru livrări intracomunitare
+Desigur că prima variantă este stornarea și refacerea facturii emise. Dacă totuși se insistă asupra regularizării livrări intracomunitare scutite conform art. 294 alin.(2) lit.a) şi d) din CF, atunci va trebui setat și folosit o valoare specifică pentru Grupă Înreg TVA Op. Econimici.
 
-Vezi jurnalele
+=== 9. Inventar
+La minus de inventar, se face nota contabilă manual 635-4426 cu valoarea (doar a) tva-ului care nu este deductibil. Astefel se ajusteaza TVA-ul dedus. Aceasta tranzactie trebuie sa apară in SAF_T pe grupa 380, iar pentru aceasta se face parametrizare specifica in VAT Posting Setup (inventar cu Inventar).
 
-*DECLARATII*
-
-*+++Pas 1.+++* Pentru a genera declarațiile, căutăm VAT Statements (Clauze TVA) în bara de căutare, și alegem _JNL_TVA_.
+=== 10. Jurnale de TVA și Declarațiile D300, D390, D394
+Jurnalele de TVA și Declarațiile sunt definite in pagina de VAT Statements.
 
 image:media/image1.png[A screenshot of a computer AI-generated content may be incorrect.,width=600,height=273]
 
@@ -104,7 +59,7 @@ image:media/image4.png[image,width=720,height=301]
 = se intocmeste in baza jurnalelor de TVA (pentru toti partenerii si toate tranzactiile)– adica e o situatie sintetica pe baza Jurnalul de Achizitii si Jurnalul de Vanzari
 
 = acest decont trebuie sa bata/se reconciliaza cu aceste 2 jurnale detaliate si cu balanta
-
+, 
 * https://static.anaf.ro/static/10/Anaf/Declaratii_R/300.html - vezi Soft A
 
 Limitarea responsabilitatii: +
