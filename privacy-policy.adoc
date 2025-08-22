@@ -1,1 +1,11 @@
-=Privacy policy
+= Romanian Localization Privacy Policy
+
+The Soft Extend Romanian Localization for Business Central consists of a number of BC extensions that together provide the full feature set.
+All the data stored and handled by the extensions is stored within the confines of the Business Central instance they run on, with the exceptions noted below.
+For cloud environments that means that all the data is stored and accessed according to the limitations, rulesets and permissions set by tennant administrators.
+
+== Communications with external services
+
+In order for some of the features to work as expected (e.g: electronic invoicing), our extensions need to be given permission to send data to externals services.
+These services are limited to govenment-managed APIs, and ,if so configured, email services (e.g: sending customized invoice PDFs alongside the official ones).
+
