@@ -1,1 +1,7 @@
-=Termene și condiții
+= Termene și condiții
+
+1. Furnizorul declară și garantează că pachetul software de localizare pentru Microsoft Dynamics 365 Business Central, livrat în cadrul prezentului contract, a fost supus validării funcționale în raport cu prevederile legislației fiscale românești în vigoare la data livrării. 
+2. Furnizorul își asumă responsabilitatea că soluția este conformă cu cadrul normativ aplicabil (inclusiv, dar fără a se limita la, Codul Fiscal, reglementările contabile OMFP și ordinele ANAF aferente) și este pe deplin compatibilă cu versiunea de Business Central implementată la Client.
+3. Pachetul Software este și rămâne proprietatea exclusivă a Furnizorului. 
+4. Beneficiarul are doar drept de utilizare (licență neexclusivă, netransferabilă, revocabilă) pe perioada de  inchiriere. 
+5. Este interzisă reproducerea, modificarea, distribuirea sau decompilarea software-ului fără acordul scris al Furnizorului. 
