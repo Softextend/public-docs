@@ -1,3 +1,5 @@
+This offering comprises commercial software products and services and related materials of Soft Extend. Soft Extend Programs are separately licensed under the Software License Agreement available in the Dynamics of the Soft Extend Programs.
+
 = Termene și condiții
 
 1. Soft Extend SRL declară și garantează că PACHETUL SOFTWARE de Localizare România pentru Microsoft Dynamics 365 Business Central, a fost supus validării funcționale în raport cu prevederile legislației fiscale românești în vigoare la data livrării. 
