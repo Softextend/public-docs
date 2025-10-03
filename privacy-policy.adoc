@@ -1,11 +1,23 @@
-= Romanian Localization Privacy Policy
+= Politica de Confidențialitate
 
-The Soft Extend Romanian Localization for Business Central consists of a number of BC extensions that together provide the full feature set.
-All the data stored and handled by the extensions is stored within the confines of the Business Central instance they run on, with the exceptions noted below.
-For cloud environments that means that all the data is stored and accessed according to the limitations, rulesets and permissions set by tennant administrators.
-
-== Communications with external services
-
-In order for some of the features to work as expected (e.g: electronic invoicing), our extensions need to be given permission to send data to externals services.
-These services are limited to govenment-managed APIs, and ,if so configured, email services (e.g: sending customized invoice PDFs alongside the official ones).
-
+1. Informații generale
+Soft Extend Romanian Localization pentru Microsoft Dynamics 365 Business Central este un set de extensii care rulează exclusiv în cadrul instanței Business Central a clientului. Toate datele procesate de extensii sunt stocate local, în conformitate cu politicile și permisiunile definite de administratorii de tenant.
+2. Tipuri de date colectate
+Extensiile pot procesa date precum: informații financiare, date de identificare fiscală, adrese de email, date despre tranzacții și documente contabile. Acestea pot include date personale, în funcție de modul în care sunt utilizate extensiile de către client.
+3. Scopul prelucrării datelor
+Datele sunt prelucrate exclusiv pentru funcționarea corectă a extensiilor, cum ar fi generarea de facturi, comunicarea cu API-uri guvernamentale și trimiterea de documente prin email.
+4. Partajarea datelor cu terți
+Datele pot fi partajate cu autorități guvernamentale (ex: ANAF) prin API-uri oficiale, precum și cu servicii de email configurate de utilizator. Soft Extend nu partajează datele cu alți terți și nu colectează date în scopuri proprii.
+5. Drepturile utilizatorului
+Conform GDPR, utilizatorii au dreptul de acces, rectificare, ștergere și restricționare a prelucrării datelor personale. Pentru exercitarea acestor drepturi, utilizatorii trebuie să contacteze administratorul de sistem al companiei lor.
+6. Măsuri de securitate
+Datele sunt protejate prin măsuri de securitate precum criptare, autentificare și controlul accesului, conform politicilor Microsoft și ale administratorului de tenant.
+7. Perioada de stocare a datelor
+Datele sunt păstrate atât timp cât sunt necesare pentru funcționarea extensiilor și conform politicilor companiei utilizatoare.
+8. Transferuri internaționale de date
+În cazul utilizării în medii cloud, datele pot fi stocate în centre de date Microsoft din afara UE. Aceste transferuri respectă clauzele contractuale standard și politicile de protecție a datelor impuse de Microsoft.
+9. Date de contact
+Pentru întrebări legate de această politică de confidențialitate, ne puteți contacta la:
+📧 office@softextend.ro
+🏢 Soft Extend SRL
+📍 Str. Observatorului nr. 90, Cluj-Napoca, România
