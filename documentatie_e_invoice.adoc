@@ -1,61 +1,73 @@
-== LOCALIZARE SFX
+== RO e-Factura
 
-=== 1. Integrare cu ANAF
-In fișa pertenerilor, la completarea câmpului Cod Unic de Inregistrare (VAT Registration No), se completează automat următoarele câmpuri cu date de pe platforma ANAF:
+=== 1. Prezentare generală
+RO e-Factura reprezintă sistemul național de facturare electronică implementat de ANAF pentru transmiterea și validarea facturilor în format electronic (XML).
 
-* Înregistrat în scopuri de TVA
-* TVA la Încasare
-* Inactiv
-* Câmpul Affiliated Person se completează manual de către utilizator.
+În Business Central, integrarea cu sistemul RO e-Factura se realizează prin funcționalitatea E-Documents, care permite generarea, transmiterea și recepția facturilor electronice.
 
-Există un raport care poate fi rulat oricând de cătru utilizator, și verifică modificările apărute între datele din aplicația Busines Central și cele pe pe platforma ANAF.
+Sistemul permite două tipuri de operațiuni:
+* transmiterea facturilor de vânzare către ANAF
+* importul facturilor primite de la furnizori prin platforma SPV
 
-=== 2. Mijloace fixe
-Mijloacele fixe și obiectele de inventar pot fi urmărite pe utilizator și gestiune/locație. Există un raport specific - Registru MF - pentru vizualizarea istoricului unui MF.
+Prin această integrare se asigură conformitatea cu legislația fiscală din România privind facturarea electronică.
 
-=== 3. Ajustare cursului de schimb
-La ajustarea cursului de schimb se pot pune filtre pe toate câmpurile din tabelele de Clienți, Furnizori, Bănci, Conturi Contabile. De asemenea e disponibilă previzualizarea înainte de înregistrare, funcționalitate activată din Feature Management.
+=== 2. Configurare serviciu e-Factura
+Pentru utilizarea sistemului RO e-Factura este necesară configurarea serviciului în pagina E-Document Services.
 
-=== 4. Închiderea de TVA
-Închiderea de TVA se rulează la sfârșitul fiecărei luni și presupune închiderea conturilor de venituri și cheltuieli cu contul de profit și perdere. Această operațiune se poate executa de oricâte ori se dorește și e nevoie.
+În această pagină se definesc:
+* codul și descrierea serviciului
+* formatul documentului electronic
+* tipul integrării cu serviciul extern
+* parametrii pentru procesarea documentelor
 
-=== 5. Instrumente de plata si incasare
-Instrumentele de plată, CEC-urile și Biletele la Ordin, nu afectează soldul partenerului. Soldul acestora este vizibil atât în fișa partenerului, cât și prin intermediul analizelor financiare pe dimensiuni.
-Sunt două (2) etape în operarea acestor instrumente: înregistrarea și incararea/plata. Înregistrarea instrumentului se face prin intermediul unui jurnal general și presupune mai multă operare manuala (completarea partenerului, a numărului instrumentului, a datei scadente, a sumei și aplicarea acesteia pe facturile deschise), pe când încasarea presupune doar operarea extrasului bancar și aplicarea plății la instrument.
+Aceste configurări stabilesc modul în care documentele electronice sunt generate și transmise către ANAF.
 
-=== 6. Înregistrarea transportului la importuri
-În cazul transportului la Import in care apar diferente între valoarea RON a transportului de pe fact transportatorului și valoarea transportului la curs de vamă, se introduce factura transportatorului iar aceasta va apărea atât in coloana de achiziții de import cât și în țară. Astfel se rezolvă problema din D300 fără a modifica valoarea bazei de impozitare și fără să fie nevoie de rotunjiri.
+=== 3. Transmiterea facturilor către ANAF
+Facturile de vânzare pot fi transmise către ANAF prin intermediul paginii E-Documents.
 
-=== 7. Înregistrarea facturilor de import
-Se poate înregistra un singur document și fără a fi nevoie de completarea unor info suplimentare (nr doc vamal de import).
+Fluxul de transmitere presupune următoarele etape:
+1. generarea documentului electronic în format XML
+2. validarea structurii documentului
+3. transmiterea documentului către ANAF
+4. obținerea identificatorului de încărcare (Upload Index)
+5. obținerea identificatorului de descărcare (Download ID)
+6. descărcarea răspunsului de validare
 
-=== 8. Regularizări pentru livrări intracomunitare
-Desigur că prima variantă este stornarea și refacerea facturii emise. Dacă totuși se insistă asupra regularizării livrări intracomunitare scutite conform art. 294 alin.(2) lit.a) şi d) din CF, atunci va trebui setat și folosit o valoare specifică pentru Grupă Înreg TVA Op. Econimici.
+După procesare, sistemul actualizează statusul documentului și salvează mesajul primit de la ANAF.
 
-=== 9. Inventar
-La minus de inventar, se face nota contabilă manual 635-4426 cu valoarea (doar a) tva-ului care nu este deductibil. Astefel se ajusteaza TVA-ul dedus. Aceasta tranzactie trebuie sa apară in SAF_T pe grupa 380, iar pentru aceasta se face parametrizare specifica in VAT Posting Setup (inventar cu Inventar).
+=== 4. Importul facturilor de la furnizori
+Facturile primite prin sistemul RO e-Factura pot fi descărcate în Business Central.
 
-=== 10. Jurnale de TVA și Declarațiile D300, D390, D394
-Jurnalele de TVA și Declarațiile sunt definite în pagina de VAT Statements. 
-Jurnalele de TVA de achiziții și vânzări se pot sunt rapoarte Excel pe baza VAT Statementului.
-În această pagină, din secțiunea Declarații, se pot descarca XML-urile aferente celor 3 declarații.
+Documentele sunt importate în pagina E-Documents ca documente de tip Incoming.
 
-* D300 = se intocmeste în baza jurnalelor de TVA pentru toți partenerii și toate tranzacțiile – o situatie sintetică pe baza Jurnalul de Achizitii și Jurnalul de Vânzări. Acest decont se reconciliază cu aceste 2 jurnale detaliate și cu balanța.
-Limitarea responsabilitatii: 
-1. Urmaroarele randuri din D300 nu au fost implementate: 2, 4.
-2. Pentru randurile 6 și 8 se va consulta clientul cu privire la incidența acestor tipuri de tranzacții. Dacă e nevoie de ele, atunci se va crea o noue Grupă de TVA Op. economici specifică pentru regularizare și se va parametriza în consecință inclusinv în Parametrizare Întrgistrare TVA SAFT.
+Pe baza acestora se pot genera automat documente de tip:
+* Purchase Invoice
+* Purchase Credit Memo
 
-* D390 = se intocmeste pe baza baza jurnal doar vis-a-vis de parteneri din UE. Aceasta este o declarație recapitulativă privind Achizițiile/Livrările/Prestările Intracomunitare, poate sa fie privita ca o parte a D300. Pentru această declarație se generează linii (sumele se rotunjesc la valoarea cea mai apropiată) care pot să fie modificate/șterse inainte de a genera fișierul XML. iar acestea nu vor mai apărea în XML-ul generat
+Înainte de înregistrare, documentele trebuie verificate de către utilizator.
 
-* D394 = se intocmeste pe baza baza jurnal doar vis-a-vis de parteneri din RO. Aceasta este o declaratie informativă privind Livrările/Prestările/Achizițiile efectuate pe teritoriul national, poate sa fie privita ca o parte a D300. Declarația poate fi Inițială sau Rectificativă.
+=== 5. Automatizarea proceselor
+Pentru automatizarea integrării cu platforma ANAF se utilizează Job Queue Entries.
 
-=== 11. SAF-T
-Declarația SAF-T presupune câteva parametrizări care țin în principal de conturile contabile, Parametrizare Înregistrare Contabilitate (consecința diverselor operațiuni) și Parametrizare Inregistrare TVA SAF-t. După aceste parametrizări, cu un input absolut minim, se poate verifica acuratețea datelor din sistem și apoi se poate genera fișierul XML.
+Prin aceste procese automate se pot realiza:
+* transmiterea automată a facturilor către ANAF
+* descărcarea răspunsurilor de validare
+* importul facturilor primite de la furnizori
+* actualizarea token-ului de autentificare
+* descărcarea mesajelor din SPV
 
-===12. Producție
-Înregistrarea WIP-ului se face conform legislației.
+Configurarea acestor joburi permite funcționarea automată a fluxului de facturare electronică.
 
-== 13. Raport de Dispozitie de plată / încasare
-Pt tiparirea dispozitiei, după înregistrarea operațiunii prin jurnale generale, din Intrări Registru Contabilitate, se tipareste dispoziția.
+=== 6. Gestionarea erorilor
+În cazul apariției unor probleme în procesarea documentelor, sistemul marchează documentele cu statusuri specifice de eroare.
 
+Exemple de statusuri:
+* Export Error
+* Validation Error
+* Sending Error
+* Download Error
+* Processing Error
 
+Detaliile erorilor pot fi consultate în logurile de comunicare asociate documentului electronic.
+
+Aceste informații permit identificarea rapidă a problemelor apărute în procesul de transmitere sau recepție a documentelor.
