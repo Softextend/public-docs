@@ -2,9 +2,9 @@ This offering comprises commercial software products and services and related ma
 
 = Termene și condiții
 
-1. Soft Extend SRL declară și garantează că PACHETUL SOFTWARE de Localizare România pentru Microsoft Dynamics 365 Business Central, a fost supus validării funcționale în raport cu prevederile legislației fiscale românești în vigoare la data livrării. 
+1. Soft Extend SRL declară și garantează că PACHETUL SOFTWARE de RO e-Factura pentru Microsoft Dynamics 365 Business Central, a fost supus validării funcționale în raport cu prevederile legislației fiscale românești în vigoare la data livrării. 
 2. Furnizorul își asumă responsabilitatea că soluția este conformă cu cadrul normativ aplicabil (inclusiv, dar fără a se limita la, Codul Fiscal, reglementările contabile OMFP și ordinele ANAF aferente) și este pe deplin compatibilă cu versiunea de Business Central activă.
-3. PACHETUL SOFTWARE de Localizare România pentru Microsoft Dynamics 365 Business Central, este și rămâne proprietatea exclusivă a Soft Extend SRL. 
+3. PACHETUL SOFTWARE de RO e-Factura pentru Microsoft Dynamics 365 Business Central, este și rămâne proprietatea exclusivă a Soft Extend SRL. 
 4. Beneficiarul are doar drept de utilizare (licență neexclusivă, netransferabilă, revocabilă) pe perioada de  inchiriere. 
 5. Este interzisă reproducerea, modificarea, distribuirea sau decompilarea software-ului fără acordul scris al Soft Extend SRL. 
 6. Beneficiarul poate denunța unilateral prezentul pachet software cu cel puțin 3 luni calendaristice complete înainte de data încetării contractului. Preavizul începe să curgă de la prima zi a lunii calendaristice următoare comunicării notificării. 
