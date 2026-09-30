@@ -1,0 +1,25 @@
+= Privacy Policy
+
+1. General information
+Soft Extend Document Currency for Microsoft Dynamics 365 Business Central is an extension that runs exclusively within the customer's Business Central environment. All data processed by the extension is stored in the customer's Business Central database, in accordance with the policies and permissions defined by the tenant administrators.
+2. Types of data processed
+The extension may process data such as: the document currency of customers, vendors and projects, currency codes and exchange rates, unit prices, unit costs, discounts and line amounts in the document currency on sales, purchase, project and requisition documents, and the related posted and archived documents. Some of this data may be linked to personal data (for example, customers or vendors who are natural persons), depending on how the extension is used by the customer.
+3. Purpose of data processing
+The data is processed exclusively for the proper operation of the extension: entering prices and costs in the document currency, converting them to the local currency at the applicable exchange rate, posting the documents and keeping the document currency values on the posted and archived documents.
+4. Sharing data with third parties
+The extension does not send data to external services. The exchange rates are read from the Currency Exchange Rates table in Business Central. Soft Extend does not share the data with third parties and does not collect the customer's business data for its own purposes.
+5. Telemetry
+The extension may send technical telemetry to Soft Extend through Azure Application Insights, as provided by Microsoft Dynamics 365 Business Central (for example, errors, performance and usage events of the extension). This telemetry is used only to monitor and improve the extension, and it does not include the customer's business data, such as partners, prices or document contents.
+6. User rights
+Under the GDPR, data subjects have the right to access, rectify, erase and restrict the processing of their personal data. To exercise these rights, users should contact the system administrator of their company, which acts as the data controller for the data stored in Business Central.
+7. Security measures
+The data is protected by security measures such as encryption, authentication and access control, in accordance with Microsoft's policies and the policies of the tenant administrator. Access to the extension is controlled through Business Central permission sets.
+8. Data retention period
+The data is kept for as long as it is needed for the operation of the extension and in accordance with the policies of the customer's company. Uninstalling the extension does not automatically delete the data stored in the database.
+9. International data transfers
+When used in cloud environments, the data may be stored in Microsoft data centers outside the EU. These transfers comply with the standard contractual clauses and the data protection policies imposed by Microsoft.
+10. Contact details
+For questions about this privacy policy, you can contact us at:
+📧 office@softextend.ro
+🏢 Soft Extend SRL
+📍 Str. Observatorului nr. 90, Cluj-Napoca, Romania

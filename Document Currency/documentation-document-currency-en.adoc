@@ -1,0 +1,59 @@
+== DOCUMENT CURRENCY
+
+=== 1. Overview
+Document Currency extends Microsoft Dynamics 365 Business Central so that sales, purchase and project documents can be negotiated in one currency and posted in another. Prices, costs and discounts are entered in the *document currency* (e.g. EUR), while the document is posted in the local currency (LCY, e.g. RON). The amounts in local currency are calculated automatically at the exchange rate valid on the posting date of the document.
+
+The app is useful when prices are agreed with customers or vendors in a foreign currency, but the invoice must be issued and posted in the local currency.
+
+=== 2. Document Currency Code and Posting Currency Code
+The app adds the *Document Currency Code* field and renames the standard *Currency Code* field to *Posting Currency Code* on the pages where the app is used:
+
+* Document Currency Code - the currency in which the prices, costs and discounts of the document are entered.
+* Posting Currency Code - the standard Business Central currency in which the document is posted.
+
+The two fields cannot be used at the same time. A Document Currency Code can be filled in only when the Posting Currency Code is empty (the document is posted in LCY), and the other way around.
+
+=== 3. Setup
+* *Currencies* and *Currency Exchange Rates* - the document currencies must exist in the *Currencies* page, with the Amount Rounding Precision filled in, and must have exchange rates for the dates of the documents.
+* *Customer Card* and *Vendor Card* - the Document Currency Code field defines the default document currency of the partner. It is copied to the new sales or purchase documents when the customer or vendor is selected.
+* *Price Lists* - sales and purchase prices in the document currency are defined in price lists with the currency code of the document currency. When a document currency is used, prices and discounts are searched only in price lists with that currency.
+
+=== 4. Sales documents
+The Document Currency Code is available on sales quotes, orders, invoices, credit memos and return orders. When it is filled in:
+
+* The *Currency Factor* is calculated from the exchange rate valid on the Posting Date (or on the work date, if the Posting Date is empty).
+* The document currency is copied to all lines.
+* On the lines, the following fields are entered in the document currency: *Doc. Currency Unit Price*, *Doc. Currency Line Discount %*, *Doc. Currency Line Discount Amount* and *Doc. Currency Line Amount*. The captions show the currency and whether prices include VAT (e.g. Unit Price Excl. VAT (in EUR)).
+* The standard Unit Price, Line Amount and discount fields are calculated automatically in LCY, by dividing the document currency amounts by the currency factor. These fields can no longer be edited directly - the message "Document Currency Code has been specified. Use document currency fields." is shown.
+* The totals of the document are shown both in LCY and in the document currency (Total Amount Excl. VAT, Total VAT and Total Amount Incl. VAT).
+
+When the Posting Date is changed, the exchange rate is recalculated. If it is different, the user is asked "Do you want to update the exchange rate?". If confirmed, the LCY prices on all lines are recalculated with the new exchange rate, while the prices in the document currency remain the same.
+
+For credit memos and return orders whose lines were copied from a posted document and applied to an item entry, the LCY prices are not recalculated, so the credited values remain the same as on the original invoice.
+
+=== 5. Purchase documents
+The Document Currency Code is available on purchase quotes, orders, invoices, credit memos and return orders, and works in the same way as for sales. On the lines, the following fields are entered in the document currency: *Doc. Currency Unit Cost*, *Doc. Currency Line Discount %*, *Doc. Currency Line Discount Amount* and *Doc. Currency Line Amount*. The standard Direct Unit Cost and the line amounts are calculated in LCY.
+
+When a purchase invoice is created from posted receipts (Get Receipt Lines), the document currency cost and discount are taken over from the purchase order lines.
+
+=== 6. Requisition worksheet
+In the *Requisition Worksheet*, the Document Currency Code, the Doc. Currency Unit Cost and the Doc. Currency Line Discount % can be filled in on the lines. The currency factor is calculated at the Order Date of the line, and the unit cost in LCY is calculated from the document currency unit cost. When the purchase orders are created with *Carry Out Action Message*, the direct unit cost of the new purchase lines is recalculated.
+
+=== 7. Projects
+* On the *Project Card*, the Document Currency Code can be filled in. By default it is taken from the bill-to customer. It cannot be changed if there are project ledger entries or planning lines already transferred to invoices.
+* On the *Project Planning Lines*, the Doc. Currency Unit Price, Line Discount %, Line Discount Amount and Line Amount are entered in the document currency. The currency factor is calculated at the Currency Date of the line.
+* When a sales invoice is created from the project planning lines, the document currency and the document currency amounts are copied to the sales invoice.
+
+=== 8. Posting
+The documents are posted in the local currency, using the LCY amounts calculated at the exchange rate of the document. The Document Currency Code, the Currency Factor and the document currency amounts are kept on the posted documents, so they can be viewed later:
+
+* Posted Sales Invoices and Posted Sales Credit Memos;
+* Posted Purchase Invoices and Posted Purchase Credit Memos.
+
+For partial invoicing, the document currency amounts are calculated for the quantity being invoiced.
+
+=== 9. Archived documents
+The document currency values are saved in the archived sales and purchase orders and are restored when an archived version of a document is restored.
+
+=== 10. Permissions
+The *Document Currency - Full Access* permission set gives access to the app. The app also extends the standard permission sets D365 BASIC, D365 READ, D365 TEAM MEMBER and SUPER.
