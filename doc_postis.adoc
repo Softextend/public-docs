@@ -1,0 +1,44 @@
+== POSTIS INTEGRATION SFX
+
+=== 1. Overview
+Postis Integration connects Microsoft Dynamics 365 Business Central with the Postis shipping platform. Courier orders are created in Business Central from sales documents and sent to Postis through the Postis API. The AWB, the shipping label and the delivery status are returned automatically to Business Central, so the shipment data does not have to be entered again in the courier's platform.
+
+An active Postis account and Postis API credentials are required to use the app.
+
+=== 2. Courier Setup
+In the *Courier Setup* page the following general settings are defined:
+
+* No. Series - the number series used for courier orders.
+* Return Send Type - the send type used for courier orders created from sales return orders.
+* Cash Payment Method - the payment method which marks a sales order as cash on delivery. When a sales order with this payment method is shipped, the cash on delivery amount is filled in automatically on the courier order with the invoice value including VAT.
+
+=== 3. Courier User Setup
+The *Courier User Setup* page stores the connection to Postis for each Business Central user. The following fields must be filled in:
+
+* ID - the Business Central user.
+* Shipping Agent Code - the shipping agent linked to Postis (e.g. POSTIS). Only sales orders with this shipping agent generate courier orders.
+* Courier User ID and Courier User Password - the credentials of the Postis API account.
+* Client ID - the client identifier in the Postis platform.
+* Sender Location Id - the identifier of the sender (pick-up) location in the Postis platform.
+* Postis API endpoints - Authentication URI, Create Shipments URI, Get Estimated Cost URI, Trace Shipment URI, Delete Shipment URI and Get Label URI. The values are provided by Postis (e.g. https://shipments.postisgate.com/api/v1/clients/shipments).
+
+=== 4. Couriers and Send Types
+* *Couriers* - the list of carriers available through Postis, used on the courier orders and in the statistics report.
+* *Courier Send Type* - the send types available for courier orders (e.g. FORWARD for deliveries, and the return send type for returns).
+* *Parcel Items* - the predefined parcels (envelopes, packages, pallets) with their description, quantity, weight and dimensions, used to fill in the shipment parcels faster.
+
+=== 5. Creating courier orders from sales orders
+When a sales order with a Shipping Agent Code set up in the *Courier User Setup* is posted as shipped, a courier order is created automatically. The following data is taken over:
+
+* Recipient - from the Ship-to Address of the sales order or, if there is none, from the customer card (name, address, city, county, post code, country, phone, contact).
+* Sender - from the location of the sales order and the Postis sender location of the user.
+* References - the sales order number (Client Order Id) and the posted sales shipment number (Shipment Reference).
+* Values - the invoice value including VAT and, for cash on delivery orders, the cash on delivery amount.
+* Lines - the posted sales shipment lines are copied to the *Courier Order Lines*.
+
+At the end of the posting, the user is asked whether to open the new courier order.
+
+=== 6. Creating courier orders from sales return orders
+In the *Sales Return Order* page the *Create Courier Order* action creates a courier order for picking up the returned goods. For returns, the sender and recipient data are inverted: the customer becomes the sender and the location becomes the recipient. The return send type from *Courier Setup* is used.
+
+=== 7. Courier order card
