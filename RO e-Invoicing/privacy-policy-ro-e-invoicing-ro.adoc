@@ -1,0 +1,23 @@
+= Politica de Confidențialitate
+
+1. Informații generale
+Soft Extend RO e-Factura pentru Microsoft Dynamics 365 Business Central este o extensie care rulează exclusiv în cadrul instanței Business Central a clientului și permite transmiterea facturilor electronice către sistemul național RO e-Factura administrat de ANAF, precum și importul facturilor primite de la furnizori prin SPV. Toate datele procesate de extensie sunt stocate local, în conformitate cu politicile și permisiunile definite de administratorii de tenant.
+2. Tipuri de date colectate
+Extensia poate procesa date precum: date de identificare fiscală (CUI/CIF) ale companiei, clienților și furnizorilor, denumiri și adrese ale partenerilor, date despre facturi (linii, cantități, prețuri, cote TVA, valori), fișiere XML și PDF ale facturilor, identificatori de încărcare și mesaje primite din SPV, precum și token-urile de autentificare necesare comunicării cu ANAF. Acestea pot include date personale, în funcție de partenerii înregistrați de client (de ex. persoane fizice autorizate).
+3. Scopul prelucrării datelor
+Datele sunt prelucrate exclusiv pentru funcționarea corectă a extensiei, respectiv generarea facturilor în format XML conform standardului RO e-Factura, transmiterea acestora către ANAF, verificarea stării de procesare, descărcarea mesajelor și a facturilor primite din SPV și gestionarea erorilor de validare.
+4. Partajarea datelor cu terți
+Datele sunt transmise către ANAF prin API-urile oficiale ale sistemului RO e-Factura, în măsura impusă de legislația fiscală. Soft Extend nu partajează datele cu alți terți și nu colectează date în scopuri proprii.
+5. Drepturile utilizatorului
+Conform GDPR, utilizatorii au dreptul de acces, rectificare, ștergere și restricționare a prelucrării datelor personale, cu respectarea obligațiilor legale de raportare și arhivare a facturilor. Pentru exercitarea acestor drepturi, utilizatorii trebuie să contacteze administratorul de sistem al companiei lor.
+6. Măsuri de securitate
+Datele sunt protejate prin măsuri de securitate precum criptare, autentificare și controlul accesului, conform politicilor Microsoft și ale administratorului de tenant. Comunicarea cu ANAF se realizează prin conexiuni securizate, pe baza autentificării OAuth, iar token-urile de acces sunt stocate în mod securizat în Business Central.
+7. Perioada de stocare a datelor
+Datele sunt păstrate atât timp cât sunt necesare pentru funcționarea extensiei, conform termenelor legale de arhivare a documentelor financiar-contabile și politicilor companiei utilizatoare.
+8. Transferuri internaționale de date
+În cazul utilizării în medii cloud, datele pot fi stocate în centre de date Microsoft din afara UE. Aceste transferuri respectă clauzele contractuale standard și politicile de protecție a datelor impuse de Microsoft.
+9. Date de contact
+Pentru întrebări legate de această politică de confidențialitate, ne puteți contacta la:
+📧 office@softextend.ro
+🏢 Soft Extend SRL
+📍 Str. Observatorului nr. 90, Cluj-Napoca, România

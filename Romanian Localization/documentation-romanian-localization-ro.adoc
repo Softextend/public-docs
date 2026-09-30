@@ -1,0 +1,59 @@
+== LOCALIZARE SFX
+
+=== 1. Integrare cu ANAF
+În fișa partenerilor, la completarea câmpului Cod Unic de Înregistrare (VAT Registration No), se completează automat următoarele câmpuri cu date de pe platforma ANAF:
+
+* Înregistrat în scopuri de TVA
+* TVA la Încasare
+* Inactiv
+* Câmpul Affiliated Person se completează manual de către utilizator.
+
+Există un raport care poate fi rulat oricând de către utilizator, și verifică modificările apărute între datele din aplicația Business Central și cele de pe platforma ANAF.
+
+=== 2. Mijloace fixe
+Mijloacele fixe și obiectele de inventar pot fi urmărite pe utilizator și gestiune/locație. Există un raport specific - Registru MF - pentru vizualizarea istoricului unui MF.
+
+=== 3. Ajustarea cursului de schimb
+La ajustarea cursului de schimb se pot pune filtre pe toate câmpurile din tabelele de Clienți, Furnizori, Bănci, Conturi Contabile. De asemenea e disponibilă previzualizarea înainte de înregistrare, funcționalitate activată din Feature Management.
+
+=== 4. Închiderea de TVA
+Închiderea de TVA se rulează la sfârșitul fiecărei luni și presupune închiderea conturilor de venituri și cheltuieli cu contul de profit și pierdere. Această operațiune se poate executa de oricâte ori se dorește și e nevoie.
+
+=== 5. Instrumente de plată și încasare
+Instrumentele de plată, CEC-urile și Biletele la Ordin, nu afectează soldul partenerului. Soldul acestora este vizibil atât în fișa partenerului, cât și prin intermediul analizelor financiare pe dimensiuni.
+Sunt două (2) etape în operarea acestor instrumente: înregistrarea și încasarea/plata. Înregistrarea instrumentului se face prin intermediul unui jurnal general și presupune mai multă operare manuală (completarea partenerului, a numărului instrumentului, a datei scadente, a sumei și aplicarea acesteia pe facturile deschise), pe când încasarea presupune doar operarea extrasului bancar și aplicarea plății la instrument.
+
+=== 6. Înregistrarea transportului la importuri
+În cazul transportului la import în care apar diferențe între valoarea RON a transportului de pe factura transportatorului și valoarea transportului la curs de vamă, se introduce factura transportatorului iar aceasta va apărea atât în coloana de achiziții de import cât și în țară. Astfel se rezolvă problema din D300 fără a modifica valoarea bazei de impozitare și fără să fie nevoie de rotunjiri.
+
+=== 7. Înregistrarea facturilor de import
+Se poate înregistra un singur document și fără a fi nevoie de completarea unor informații suplimentare (nr. documentului vamal de import).
+
+=== 8. Regularizări pentru livrări intracomunitare
+Desigur că prima variantă este stornarea și refacerea facturii emise. Dacă totuși se insistă asupra regularizării livrărilor intracomunitare scutite conform art. 294 alin. (2) lit. a) și d) din CF, atunci va trebui setat și folosit o valoare specifică pentru Grupă Înreg TVA Op. Economici.
+
+=== 9. Inventar
+La minus de inventar, se face nota contabilă manual 635-4426 cu valoarea (doar a) TVA-ului care nu este deductibil. Astfel se ajustează TVA-ul dedus. Această tranzacție trebuie să apară în SAF-T pe grupa 380, iar pentru aceasta se face parametrizare specifică în VAT Posting Setup (inventar cu Inventar).
+
+=== 10. Jurnale de TVA și Declarațiile D300, D390, D394
+Jurnalele de TVA și Declarațiile sunt definite în pagina de VAT Statements. 
+Jurnalele de TVA de achiziții și vânzări sunt rapoarte Excel pe baza VAT Statementului.
+În această pagină, din secțiunea Declarații, se pot descărca XML-urile aferente celor 3 declarații.
+
+* D300 = se întocmește în baza jurnalelor de TVA pentru toți partenerii și toate tranzacțiile – o situație sintetică pe baza Jurnalului de Achiziții și a Jurnalului de Vânzări. Acest decont se reconciliază cu aceste 2 jurnale detaliate și cu balanța.
+Limitarea responsabilității: 
+1. Următoarele rânduri din D300 nu au fost implementate: 2, 4.
+2. Pentru rândurile 6 și 8 se va consulta clientul cu privire la incidența acestor tipuri de tranzacții. Dacă e nevoie de ele, atunci se va crea o nouă Grupă de TVA Op. economici specifică pentru regularizare și se va parametriza în consecință inclusiv în Parametrizare Înregistrare TVA SAF-T.
+
+* D390 = se întocmește pe baza jurnalelor doar vis-a-vis de parteneri din UE. Aceasta este o declarație recapitulativă privind Achizițiile/Livrările/Prestările Intracomunitare, poate să fie privită ca o parte a D300. Pentru această declarație se generează linii (sumele se rotunjesc la valoarea cea mai apropiată) care pot să fie modificate/șterse înainte de a genera fișierul XML, iar cele șterse nu vor mai apărea în XML-ul generat.
+
+* D394 = se întocmește pe baza jurnalelor doar vis-a-vis de parteneri din RO. Aceasta este o declarație informativă privind Livrările/Prestările/Achizițiile efectuate pe teritoriul național, poate să fie privită ca o parte a D300. Declarația poate fi Inițială sau Rectificativă.
+
+=== 11. SAF-T
+Declarația SAF-T presupune câteva parametrizări care țin în principal de conturile contabile, Parametrizare Înregistrare Contabilitate (consecința diverselor operațiuni) și Parametrizare Înregistrare TVA SAF-T. După aceste parametrizări, cu un input absolut minim, se poate verifica acuratețea datelor din sistem și apoi se poate genera fișierul XML.
+
+=== 12. Producție
+Înregistrarea WIP-ului se face conform legislației.
+
+=== 13. Raport de Dispoziție de plată / încasare
+Pentru tipărirea dispoziției, după înregistrarea operațiunii prin jurnale generale, din Intrări Registru Contabilitate, se tipărește dispoziția.

@@ -1,6 +1,6 @@
-This offering comprises commercial software products and services and related materials of Soft Extend. Soft Extend Programs are separately licensed under the Software License Agreement available in the Dynamics of the Soft Extend Programs.
-
 = Terms and Conditions
+
+This offering comprises commercial software products and services and related materials of Soft Extend. Soft Extend Programs are separately licensed under the Software License Agreement available in the Dynamics of the Soft Extend Programs.
 
 1. Soft Extend SRL declares and warrants that the Postis Integration SOFTWARE PACKAGE for Microsoft Dynamics 365 Business Central has undergone functional validation against the Postis platform API specifications in force at the date of delivery.
 2. The Provider is responsible for ensuring that the solution is compatible with the active version of Business Central and with the API published by Postis at the date of delivery. If Postis changes its API, the Provider will adapt the SOFTWARE PACKAGE within a reasonable time from the date on which the changes were publicly announced by Postis.

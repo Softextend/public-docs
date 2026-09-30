@@ -6,6 +6,7 @@ RO e-Factura reprezintă sistemul național de facturare electronică implementa
 În Business Central, integrarea cu sistemul RO e-Factura se realizează prin funcționalitatea E-Documents, care permite generarea, transmiterea și recepția facturilor electronice.
 
 Sistemul permite două tipuri de operațiuni:
+
 * transmiterea facturilor de vânzare către ANAF
 * importul facturilor primite de la furnizori prin platforma SPV
 
@@ -15,6 +16,7 @@ Prin această integrare se asigură conformitatea cu legislația fiscală din Ro
 Pentru utilizarea sistemului RO e-Factura este necesară configurarea serviciului în pagina E-Document Services.
 
 În această pagină se definesc:
+
 * codul și descrierea serviciului
 * formatul documentului electronic
 * tipul integrării cu serviciul extern
@@ -26,6 +28,7 @@ Aceste configurări stabilesc modul în care documentele electronice sunt genera
 Facturile de vânzare pot fi transmise către ANAF prin intermediul paginii E-Documents.
 
 Fluxul de transmitere presupune următoarele etape:
+
 1. generarea documentului electronic în format XML
 2. validarea structurii documentului
 3. transmiterea documentului către ANAF
@@ -41,6 +44,7 @@ Facturile primite prin sistemul RO e-Factura pot fi descărcate în Business Cen
 Documentele sunt importate în pagina E-Documents ca documente de tip Incoming.
 
 Pe baza acestora se pot genera automat documente de tip:
+
 * Purchase Invoice
 * Purchase Credit Memo
 
@@ -50,6 +54,7 @@ Pe baza acestora se pot genera automat documente de tip:
 Pentru automatizarea integrării cu platforma ANAF se utilizează Job Queue Entries.
 
 Prin aceste procese automate se pot realiza:
+
 * transmiterea automată a facturilor către ANAF
 * descărcarea răspunsurilor de validare
 * importul facturilor primite de la furnizori
@@ -62,6 +67,7 @@ Configurarea acestor joburi permite funcționarea automată a fluxului de factur
 În cazul apariției unor probleme în procesarea documentelor, sistemul marchează documentele cu statusuri specifice de eroare.
 
 Exemple de statusuri:
+
 * Export Error
 * Validation Error
 * Sending Error

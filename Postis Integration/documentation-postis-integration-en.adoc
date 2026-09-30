@@ -1,4 +1,4 @@
-== POSTIS INTEGRATION SFX
+== POSTIS INTEGRATION
 
 === 1. Overview
 Postis Integration connects Microsoft Dynamics 365 Business Central with the Postis shipping platform. Courier orders are created in Business Central from sales documents and sent to Postis through the Postis API. The AWB, the shipping label and the delivery status are returned automatically to Business Central, so the shipment data does not have to be entered again in the courier's platform.
