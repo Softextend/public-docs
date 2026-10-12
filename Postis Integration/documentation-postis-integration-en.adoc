@@ -42,3 +42,20 @@ At the end of the posting, the user is asked whether to open the new courier ord
 In the *Sales Return Order* page the *Create Courier Order* action creates a courier order for picking up the returned goods. For returns, the sender and recipient data are inverted: the customer becomes the sender and the location becomes the recipient. The return send type from *Courier Setup* is used.
 
 === 7. Courier order card
+
+=== 8. Licensing and permissions
+Postis Integration is licensed per user. The licenses are bought in Microsoft Marketplace and assigned to named users in the Microsoft 365 admin center.
+
+* Users with a license can use all the functionality described in this document, as far as the permission sets assigned to them allow.
+* Users without a license cannot open the Postis pages or run its reports and actions. They can still post sales documents; no courier order is created for them and the *Create Courier Order* action is not shown.
+* The license defines the maximum access. What a user can actually do is decided by the permission sets assigned in Business Central.
+
+The following permission sets are provided. Each one includes the previous one:
+
+* *Postis - Read* - opens all the Postis pages and reports and shows the courier data, without the Postis credentials. Included in D365 READ and D365 TEAM MEMBER.
+* *Postis - User* - everyday work: creates and maintains courier orders, sends them to Postis and tracks the shipments. Included in D365 BASIC and D365 BUS FULL ACCESS.
+* *Postis - Full Access* - also maintains couriers, send types, parcel items, the *Courier Setup* and the *Courier User Setup* (which holds the Postis credentials). Included in SUPER. Assign it only to administrators.
+
+Scheduled jobs, such as the report that updates the shipment tracking, run with the license and permissions of the user who created the job queue entry. Create them with a licensed user.
+
+Microsoft partners with delegated access to the customer's environment can configure and support the app without a purchased license.
