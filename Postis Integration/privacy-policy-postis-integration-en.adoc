@@ -13,7 +13,7 @@ The extension may send technical telemetry to Soft Extend through Azure Applicat
 6. User rights
 Under the GDPR, data subjects have the right to access, rectify, erase and restrict the processing of their personal data. To exercise these rights, users should contact the system administrator of their company, which acts as the data controller for the data stored in Business Central.
 7. Security measures
-The data is protected by security measures such as encryption, authentication and access control, in accordance with Microsoft's policies and the policies of the tenant administrator. The communication with the Postis API is made exclusively over HTTPS, and access to the extension is controlled through the licenses assigned to users in the Microsoft 365 admin center and through Business Central permission sets.
+The data is protected by security measures such as encryption, authentication and access control, in accordance with Microsoft's policies and the policies of the tenant administrator. The communication with the Postis API is made exclusively over HTTPS. The Postis password is stored encrypted in the isolated storage of the extension, not in a database table. Access to the extension is controlled through the licenses assigned to users in the Microsoft 365 admin center and through Business Central permission sets.
 8. Data retention period
 The data is kept for as long as it is needed for the operation of the extension and in accordance with the policies of the customer's company. Uninstalling the extension does not automatically delete the data stored in the database.
 9. International data transfers

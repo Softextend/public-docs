@@ -1,61 +1,72 @@
 == POSTIS INTEGRATION
 
 === 1. Overview
-Postis Integration connects Microsoft Dynamics 365 Business Central with the Postis shipping platform. Courier orders are created in Business Central from sales documents and sent to Postis through the Postis API. The AWB, the shipping label and the delivery status are returned automatically to Business Central, so the shipment data does not have to be entered again in the courier's platform.
+Postis Integration connects Microsoft Dynamics 365 Business Central with the Postis shipping platform. When a sales order is shipped, a courier order is created in Business Central. From the courier order, the shipment is sent to Postis, which returns the AWB, the shipping label and the delivery status. The shipment data does not have to be entered again in the courier's platform.
 
-An active Postis account and Postis API credentials are required to use the app.
+An active Postis account and Postis API credentials are required.
 
-=== 2. Courier Setup
-In the *Courier Setup* page the following general settings are defined:
+=== 2. Setup
+Set up the app in this order:
 
-* No. Series - the number series used for courier orders.
-* Return Send Type - the send type used for courier orders created from sales return orders.
-* Cash Payment Method - the payment method which marks a sales order as cash on delivery. When a sales order with this payment method is shipped, the cash on delivery amount is filled in automatically on the courier order with the invoice value including VAT.
+. *Courier Setup* - the general settings:
+** No. Series - the number series for courier orders.
+** Return Send Type - the send type for courier orders created from sales return orders.
+** Cash Payment Method - the payment method that marks a sales order as cash on delivery. For these orders, the cash on delivery amount is filled in with the invoice value including VAT.
+. *Courier Send Type* - the send types. FORWARD (deliveries) must exist, otherwise courier orders are not created automatically.
+. *Couriers* - the carriers available through Postis.
+. *Parcel Items* - predefined parcels (envelopes, packages, pallets) with weight and dimensions, to fill in the shipment parcels faster.
+. *Courier User Setup* - one record for each Postis connection:
+** ID - the code of the connection.
+** Shipping Agent Code - the shipping agent that ships through Postis (e.g. POSTIS). Only sales orders with this shipping agent get a courier order automatically.
+** Courier User ID and Courier User Password - the Postis API account. The password is stored encrypted in the isolated storage of the app, not in a database table. The page shows only *** when a password is set.
+** Client ID and Sender Location Id - your client and pick-up location identifiers in Postis.
+** API URIs - Authentication, Create Shipment, Get Estimated Cost, Trace Shipment, Delete Shipment and Get Label. Postis provides the values (e.g. https://shipments.postisgate.com/api/v1/clients/shipments).
 
-=== 3. Courier User Setup
-The *Courier User Setup* page stores the connection to Postis for each Business Central user. The following fields must be filled in:
+=== 3. Courier orders from sales orders
+When a sales order is posted as shipped and its shipping agent has a *Courier User Setup*, a courier order is created automatically, for every user who posts, with or without a Postis license. The courier order takes over:
 
-* ID - the Business Central user.
-* Shipping Agent Code - the shipping agent linked to Postis (e.g. POSTIS). Only sales orders with this shipping agent generate courier orders.
-* Courier User ID and Courier User Password - the credentials of the Postis API account.
-* Client ID - the client identifier in the Postis platform.
-* Sender Location Id - the identifier of the sender (pick-up) location in the Postis platform.
-* Postis API endpoints - Authentication URI, Create Shipments URI, Get Estimated Cost URI, Trace Shipment URI, Delete Shipment URI and Get Label URI. The values are provided by Postis (e.g. https://shipments.postisgate.com/api/v1/clients/shipments).
+* Recipient - the ship-to address of the sales order or, if there is none, the customer's address.
+* Sender - the location of the sales order and the Sender Location Id of the Postis connection.
+* References - the sales order no. (Client Order Id) and the posted sales shipment no. (Shipment Reference).
+* Values - the invoice value including VAT and, for cash on delivery, the cash on delivery amount.
+* Lines - the lines of the posted sales shipment.
 
-=== 4. Couriers and Send Types
-* *Couriers* - the list of carriers available through Postis, used on the courier orders and in the statistics report.
-* *Courier Send Type* - the send types available for courier orders (e.g. FORWARD for deliveries, and the return send type for returns).
-* *Parcel Items* - the predefined parcels (envelopes, packages, pallets) with their description, quantity, weight and dimensions, used to fill in the shipment parcels faster.
+Users with a license are then asked whether to open the courier order.
 
-=== 5. Creating courier orders from sales orders
-When a sales order with a Shipping Agent Code set up in the *Courier User Setup* is posted as shipped, a courier order is created automatically. The following data is taken over:
+If the courier order cannot be created, the posting is kept and users who can create courier orders get a notification. The courier order can be created later with *Create Courier Order* on the posted sales shipment; a shipment never gets a second courier order. Exception: when posting from an inventory pick, or with a posting number series set to Date Order, an error in the courier order stops the posting.
 
-* Recipient - from the Ship-to Address of the sales order or, if there is none, from the customer card (name, address, city, county, post code, country, phone, contact).
-* Sender - from the location of the sales order and the Postis sender location of the user.
-* References - the sales order number (Client Order Id) and the posted sales shipment number (Shipment Reference).
-* Values - the invoice value including VAT and, for cash on delivery orders, the cash on delivery amount.
-* Lines - the posted sales shipment lines are copied to the *Courier Order Lines*.
+=== 4. Courier orders from sales return orders
+On a sales return order, *Create Courier Order* creates a courier order for picking up the returned goods. The customer becomes the sender, the location becomes the recipient, and the Return Send Type from *Courier Setup* is used.
 
-At the end of the posting, the user is asked whether to open the new courier order.
+=== 5. Working with a courier order
+The *Courier Order* card shows the sender and the recipient, the *Shipment Parcels*, the *Courier Order Lines* and the *Trace Shipment* history. A courier order can be changed while its status is Not Sent or Deleted.
 
-=== 6. Creating courier orders from sales return orders
-In the *Sales Return Order* page the *Create Courier Order* action creates a courier order for picking up the returned goods. For returns, the sender and recipient data are inverted: the customer becomes the sender and the location becomes the recipient. The return send type from *Courier Setup* is used.
+The actions on the card:
 
-=== 7. Courier order card
+* Get Estimated Cost - asks Postis for the estimated shipping cost.
+* Create Shipment - sends the order to Postis. Postis returns the AWB and the shipping cost, and the status becomes In Progress.
+* Download AWB - downloads the shipping label.
+* Trace Shipment - gets the delivery history. When Postis reports the final status, the status becomes Completed.
+* Delete Shipment - cancels the shipment in Postis, clears the AWB and sets the status to Deleted. The order can then be changed and sent again.
 
-=== 8. Licensing and permissions
-Postis Integration is licensed per user. The licenses are bought in Microsoft Marketplace and assigned to named users in the Microsoft 365 admin center.
+On *Courier Order Lines*, *Get Sales Shipment Lines* and *Get Return Sales Lines* add lines from other documents.
 
-* Users with a license can use all the functionality described in this document, as far as the permission sets assigned to them allow.
-* Users without a license cannot open the Postis pages or run its reports and actions. They can still post sales documents; no courier order is created for them and the *Create Courier Order* action is not shown.
-* The license defines the maximum access. What a user can actually do is decided by the permission sets assigned in Business Central.
+Reports:
 
-The following permission sets are provided. Each one includes the previous one:
+* *Update Trace Shipment* - updates the delivery history of all courier orders In Progress. Schedule it in the job queue.
+* *Courier Statistics* - shipments and costs by courier, for a period.
 
-* *Postis - Read* - opens all the Postis pages and reports and shows the courier data, without the Postis credentials. Included in D365 READ and D365 TEAM MEMBER.
-* *Postis - User* - everyday work: creates and maintains courier orders, sends them to Postis and tracks the shipments. Included in D365 BASIC and D365 BUS FULL ACCESS.
-* *Postis - Full Access* - also maintains couriers, send types, parcel items, the *Courier Setup* and the *Courier User Setup* (which holds the Postis credentials). Included in SUPER. Assign it only to administrators.
+=== 6. Licenses and permissions
+Postis Integration is licensed per user, per month. Licenses are bought in Microsoft Marketplace and assigned to users in the Microsoft 365 admin center.
 
-Scheduled jobs, such as the report that updates the shipment tracking, run with the license and permissions of the user who created the job queue entry. Create them with a licensed user.
+* Users with a license can use everything in this document, within the permission sets assigned to them in Business Central.
+* Users without a license cannot open the Postis pages, reports or actions, and the Courier Order No. and AWB fields on purchase invoice lines are hidden for them. They can still post sales orders, and the courier order is created for them.
+* Microsoft partners with delegated access (GDAP) can set up and support the app without a license. They cannot run job queue entries.
 
-Microsoft partners with delegated access to the customer's environment can configure and support the app without a purchased license.
+Permission sets, each one including the previous one:
+
+* *Postis - Read* - shows courier orders, parcels, tracking and master data. No setup pages and no Postis credentials. Included in D365 READ and D365 TEAM MEMBER.
+* *Postis - User* - creates and changes courier orders, sends them to Postis and tracks the shipments. Included in D365 BASIC and D365 BUS FULL ACCESS.
+* *Postis - Full Access* - also the setup pages and master data, including the *Courier User Setup*. Included in SUPER. Assign it only to administrators.
+
+Job queue entries run with the license and permissions of the user who sets them to Ready. Use a licensed user for the *Update Trace Shipment* job.
